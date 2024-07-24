@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
 
         window.statusBarColor = this.getColor(R.color.black)
 
+        //Instantiate GmsDocumentScannerOptions to configure the scanner options
         val options = GmsDocumentScannerOptions.Builder()
             .setGalleryImportAllowed(true)
             .setPageLimit(2)
@@ -88,6 +89,7 @@ class MainActivity : ComponentActivity() {
 
                                     val fos = FileOutputStream(pdfFile)
 
+                                    //Store in Local (See in Device Explore -> Data -> this app data)
                                     pdf?.uri?.let {
                                         contentResolver.openInputStream(it)?.use { it ->
                                             it.copyTo(fos)
@@ -95,8 +97,8 @@ class MainActivity : ComponentActivity() {
                                     }
 
 
+                                    //Send the Scanned Doc to Mail
                                     val context = this
-
                                     val intent = Intent(Intent.ACTION_SEND).apply {
                                         type = "application/pdf"
                                         val uri = FileProvider.getUriForFile(
@@ -131,6 +133,26 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         imageUriList.forEach { it ->
+                            // Image Loader using Coil Dependency
+
+                           /***  WHAT IS AsyncImage
+                            *
+                            * AsyncImage is a composable that executes an image request asynchronously and renders the result. It supports the same arguments as the standard Image composable and additionally, it supports setting placeholder/error/fallback painters and onLoading/onSuccess/onError callbacks. Here's an example that loads an image with a circle crop, crossfade, and sets a placeholder:
+
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data("https://example.com/image.jpg")
+                                    .crossfade(true)
+                                    .build(),
+                                placeholder = painterResource(R.drawable.placeholder),
+                                contentDescription = stringResource(R.string.description),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.clip(CircleShape)
+                            )
+
+                            ***/
+
+
                             AsyncImage(
                                 model = it,
                                 contentDescription = null,
@@ -156,7 +178,7 @@ class MainActivity : ComponentActivity() {
                                     ).show()
                                 }
                         }) {
-                            Text(text = "Scan Doc")
+                            Text(text = "Scan Document")
                         }
                     }
 
